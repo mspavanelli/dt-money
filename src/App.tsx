@@ -1,5 +1,11 @@
+import { GlobalStyles } from './theme/global'
+
 const App = () => {
-  return <div>dtmoney</div>
+  return (
+    <>
+      <GlobalStyles />
+    </>
+  )
 }
 
 export default App
