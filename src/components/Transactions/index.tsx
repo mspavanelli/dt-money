@@ -1,8 +1,18 @@
+import { useEffect, useState } from 'react'
+
+import api from '../../services/api'
+
 import { formatMoney } from '../../utils/formatMoney'
 
 import { Container } from './styles'
 
 const Transactions = () => {
+  const [transactions, setTransactions] = useState()
+
+  useEffect(() => {
+    api.get('transactions').then((response) => console.log(response.data))
+  }, [])
+
   return (
     <Container>
       <table>
