@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 import Modal from 'react-modal'
 
@@ -6,6 +6,7 @@ import { Container, Close, Types, RadioBox } from './styles'
 
 import IncomeIcon from '../../assets/incomes.svg'
 import OutcomeIcon from '../../assets/outcomes.svg'
+import api from '../../services/api'
 
 enum TransactionType {
   INCOME,
@@ -21,6 +22,9 @@ const NewTransactionModal = ({
   isOpen,
   onRequestClose,
 }: NewTransactionModalProps) => {
+  const [title, setTitle] = useState('')
+  const [price, setPrice] = useState(0)
+  const [category, setCategory] = useState('')
   const [selectedType, setSelectedType] = useState<TransactionType | null>(null)
 
   const setToIncome = () => {
@@ -34,6 +38,29 @@ const NewTransactionModal = ({
   const handleClose = () => {
     setSelectedType(null)
     onRequestClose()
+    resetForm()
+  }
+
+  const resetForm = () => {
+    setTitle('')
+    setPrice(0)
+    setCategory('')
+    setSelectedType(null)
+  }
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault()
+
+    const data = {
+      title,
+      price,
+      category,
+      selectedType,
+    }
+
+    api.post('transactions', data)
+
+    handleClose()
   }
 
   return (
@@ -44,12 +71,22 @@ const NewTransactionModal = ({
       overlayClassName="modal-overlay"
       className="modal-container"
     >
-      <Container action="">
+      <Container onSubmit={handleSubmit}>
         <fieldset>
           <legend>Cadastrar transação</legend>
 
-          <input type="text" placeholder="Título" />
-          <input type="number" placeholder="Preço" />
+          <input
+            type="text"
+            placeholder="Título"
+            value={title}
+            onChange={event => setTitle(event.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Preço"
+            value={price}
+            onChange={event => setPrice(Number(event.target.value))}
+          />
 
           <Types>
             <RadioBox
@@ -74,7 +111,12 @@ const NewTransactionModal = ({
             </RadioBox>
           </Types>
 
-          <input type="text" placeholder="Categoria" />
+          <input
+            type="text"
+            placeholder="Categoria"
+            value={category}
+            onChange={event => setCategory(event.target.value)}
+          />
 
           <button type="submit">Cadastrar</button>
         </fieldset>
