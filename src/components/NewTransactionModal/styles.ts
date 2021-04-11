@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { darken } from 'polished'
+import { darken, transparentize } from 'polished'
 
 import CloseIcon from '../../assets/close.svg'
 
@@ -90,38 +90,51 @@ export const Types = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 0.5rem;
+`
 
-  button {
-    background: transparent;
-    border: 1px solid var(--text-body);
+interface RadioBoxProps {
+  active?: boolean
+  activeColor: 'income' | 'outcome'
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+const Color = {
+  income: '#33CC95',
+  outcome: '#E62E4D',
+}
 
-    outline-color: var(--text-body);
-    transition: all 300ms;
+export const RadioBox = styled.button<RadioBoxProps>`
+  background: ${props =>
+    props.active
+      ? transparentize(0.9, Color[props.activeColor])
+      : 'transparent'};
+  border: 1px solid var(--text-body);
 
-    &:focus {
-      &.incomes {
-        outline-color: var(--green);
-        color: ${darken(0.2, '#33CC95')};
-      }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-      &.outcomes {
-        outline-color: var(--red);
-        color: ${darken(0.2, '#E62E4D')};
-      }
+  outline-color: var(--text-body);
+  transition: all 200ms;
+
+  &:focus {
+    &.incomes {
+      outline-color: var(--green);
+      color: ${darken(0.2, '#33CC95')};
     }
 
-    &:hover {
-      border-color: ${darken(0.5, '#d7d7d7')};
+    &.outcomes {
+      outline-color: var(--red);
+      color: ${darken(0.2, '#E62E4D')};
     }
+  }
 
-    img {
-      width: 1.25rem;
-      height: 1.25rem;
-      margin-right: 1.125rem;
-    }
+  &:hover {
+    border-color: ${darken(0.5, '#d7d7d7')};
+  }
+
+  img {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 1.125rem;
   }
 `

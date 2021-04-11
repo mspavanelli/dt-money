@@ -1,9 +1,16 @@
+import { useState } from 'react'
+
 import Modal from 'react-modal'
 
-import { Container, Close, Types } from './styles'
+import { Container, Close, Types, RadioBox } from './styles'
 
 import IncomeIcon from '../../assets/incomes.svg'
 import OutcomeIcon from '../../assets/outcomes.svg'
+
+enum TransactionType {
+  INCOME,
+  OUTCOME,
+}
 
 type NewTransactionModalProps = {
   isOpen: boolean
@@ -14,6 +21,21 @@ const NewTransactionModal = ({
   isOpen,
   onRequestClose,
 }: NewTransactionModalProps) => {
+  const [selectedType, setSelectedType] = useState<TransactionType | null>(null)
+
+  const setToIncome = () => {
+    setSelectedType(TransactionType.INCOME)
+  }
+
+  const setToOutcome = () => {
+    setSelectedType(TransactionType.OUTCOME)
+  }
+
+  const handleClose = () => {
+    setSelectedType(null)
+    onRequestClose()
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -30,14 +52,26 @@ const NewTransactionModal = ({
           <input type="number" placeholder="Preço" />
 
           <Types>
-            <button type="button" className="incomes">
+            <RadioBox
+              type="button"
+              className="incomes"
+              active={selectedType === TransactionType.INCOME}
+              activeColor="income"
+              onClick={setToIncome}
+            >
               <img src={IncomeIcon} alt="Entradas" />
               Entrada
-            </button>
-            <button type="button" className="outcomes">
+            </RadioBox>
+            <RadioBox
+              type="button"
+              active={selectedType === TransactionType.OUTCOME}
+              className="outcomes"
+              activeColor="outcome"
+              onClick={setToOutcome}
+            >
               <img src={OutcomeIcon} alt="Saídas" />
               Saída
-            </button>
+            </RadioBox>
           </Types>
 
           <input type="text" placeholder="Categoria" />
@@ -45,7 +79,7 @@ const NewTransactionModal = ({
           <button type="submit">Cadastrar</button>
         </fieldset>
       </Container>
-      <Close onClick={onRequestClose} />
+      <Close onClick={handleClose} />
     </Modal>
   )
 }
