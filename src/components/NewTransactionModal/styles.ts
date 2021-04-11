@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { darken } from 'polished'
+
 import CloseIcon from '../../assets/close.svg'
 
 export const Container = styled.form`
@@ -39,7 +41,7 @@ export const Container = styled.form`
       }
     }
 
-    button {
+    button[type='submit'] {
       background: var(--green);
       border: 0;
 
@@ -81,5 +83,45 @@ export const Close = styled.button`
   &:hover,
   &:focus {
     filter: brightness(0.8);
+  }
+`
+
+export const Types = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 0.5rem;
+
+  button {
+    background: transparent;
+    border: 1px solid var(--text-body);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    outline-color: var(--text-body);
+    transition: all 300ms;
+
+    &:focus {
+      &.incomes {
+        outline-color: var(--green);
+        color: ${darken(0.2, '#33CC95')};
+      }
+
+      &.outcomes {
+        outline-color: var(--red);
+        color: ${darken(0.2, '#E62E4D')};
+      }
+    }
+
+    &:hover {
+      border-color: ${darken(0.5, '#d7d7d7')};
+    }
+
+    img {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-right: 1.125rem;
+    }
   }
 `
