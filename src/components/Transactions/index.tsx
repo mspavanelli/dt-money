@@ -2,15 +2,27 @@ import { useEffect, useState } from 'react'
 
 import api from '../../services/api'
 
+import { formatDate } from '../../utils/formatDate'
 import { formatMoney } from '../../utils/formatMoney'
 
 import { Container } from './styles'
 
+type TransactionsType = {
+  id: number
+  title: string
+  amount: number
+  type: 'income' | 'outcome'
+  category: string
+  createdAt: string
+}
+
 const Transactions = () => {
-  const [transactions, setTransactions] = useState()
+  const [transactions, setTransactions] = useState<TransactionsType[]>([])
 
   useEffect(() => {
-    api.get('transactions').then((response) => console.log(response.data))
+    api
+      .get('transactions')
+      .then(response => setTransactions(response.data.transactions))
   }, [])
 
   return (
@@ -25,18 +37,16 @@ const Transactions = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Desenvolvimento de Site</td>
-            <td className='income'>{formatMoney(12000)}</td>
-            <td>Venda</td>
-            <td>12/03/2021</td>
-          </tr>
-          <tr>
-            <td>Aluguel</td>
-            <td className='outcome'>{formatMoney(1800)}</td>
-            <td>Moradia</td>
-            <td>12/03/2021</td>
-          </tr>
+          {transactions.map(transaction => (
+            <tr key={transaction.id}>
+              <td>{transaction.title}</td>
+              <td className={transaction.type || ''}>
+                {formatMoney(transaction.amount)}
+              </td>
+              <td>{transaction.category}</td>
+              <td>{formatDate(new Date(transaction.createdAt))}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </Container>
